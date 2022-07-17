@@ -10,7 +10,7 @@ export default function Products({ products, completeProducts, status, onChangeS
     const [selectedQueryValue, setSelectedQueryValue] = useState(optionAllProducts)
     const [viewFilters, setViewFilters] = useState(true)
     const [selectedFilterOption, setSelectedFilterOption] = useState(optionAllProducts)
-    
+
     const handleChangeQueryOption = useCallback(() => {
         setSelectedQueryValue(optionAllProducts)
         onChangeApiUrl(getRouteAllProducts)
@@ -18,48 +18,48 @@ export default function Products({ products, completeProducts, status, onChangeS
 
     const handleChangeQueryValue = useCallback(() => {
         setViewFilters(true)
-            if(selectedQueryOption === optionByType) {
-                queryValues.productType.every(option => {
-                    if(selectedQueryValue === option.key){
-                        onChangeApiUrl(getRouteProductType(option.id))
-                        if(option.key !== queryOptionVehicleKey){
-                            setViewFilters(false)
-                            setSelectedFilterOption(optionAllProducts)
-                        }
-                        return false
-                    } else {
-                        return true
+        if (selectedQueryOption === optionByType) {
+            queryValues.productType.every(option => {
+                if (selectedQueryValue === option.key) {
+                    onChangeApiUrl(getRouteProductType(option.id))
+                    if (option.key !== queryOptionVehicleKey) {
+                        setViewFilters(false)
+                        setSelectedFilterOption(optionAllProducts)
                     }
-                })
-            } else if(selectedQueryOption === optionBySegment){
-                queryValues.segmentType.every(option => {
-                    if(selectedQueryValue === option.key){
-                        onChangeApiUrl(getRouteSegmentType(option.id))
-                        return false
-                    } else {
-                        return true
-                    }
-                })
-            }
+                    return false
+                } else {
+                    return true
+                }
+            })
+        } else if (selectedQueryOption === optionBySegment) {
+            queryValues.segmentType.every(option => {
+                if (selectedQueryValue === option.key) {
+                    onChangeApiUrl(getRouteSegmentType(option.id))
+                    return false
+                } else {
+                    return true
+                }
+            })
+        }
     }, [selectedQueryValue, onChangeApiUrl, selectedQueryOption])
 
     const handleChangeFilterValue = useCallback(() => {
-        onChangeStatus({error: null, loaded: false})
-        if(selectedFilterOption !== optionAllProducts){
+        onChangeStatus({ error: null, loaded: false })
+        if (selectedFilterOption !== optionAllProducts) {
             const filteredProducts = []
-            if(completeProducts){
+            if (completeProducts) {
                 completeProducts.forEach(product => {
                     const productAdquisitionId = getAdquisitionId(product)
-                    if(productAdquisitionId){
+                    if (productAdquisitionId) {
                         filterOptions.every(option => {
                             const filterOptionId = option.id
                             const filterOptionKey = option.key
-                            if(filterOptionKey === selectedFilterOption){
-                                if(productAdquisitionId === filterOptionId){
+                            if (filterOptionKey === selectedFilterOption) {
+                                if (productAdquisitionId === filterOptionId) {
                                     filteredProducts.push(product)
                                     return false
                                 }
-                            } 
+                            }
                             return true
                         })
                     }
@@ -69,21 +69,21 @@ export default function Products({ products, completeProducts, status, onChangeS
         } else {
             onChangeProducts(completeProducts)
         }
-        onChangeStatus({error: null, loaded: true})
+        onChangeStatus({ error: null, loaded: true })
     }, [completeProducts, selectedFilterOption, onChangeProducts, onChangeStatus])
 
-    useEffect(()=>{
+    useEffect(() => {
         handleChangeQueryOption()
     }, [selectedQueryOption, handleChangeQueryOption])
 
-    useEffect(()=>{
+    useEffect(() => {
         handleChangeQueryValue()
     }, [selectedQueryValue, handleChangeQueryValue])
 
-    useEffect(()=>{
+    useEffect(() => {
         handleChangeFilterValue()
     }, [selectedFilterOption, handleChangeFilterValue])
-    
+
 
     const createQueryContainer = () => {
         if (selectedQueryOption !== optionAllProducts) {
@@ -112,7 +112,7 @@ export default function Products({ products, completeProducts, status, onChangeS
             <Container w='100%' display='flex' flexDir={['row', 'row', 'column']} alignItems={['center', 'center', 'flex-start']} m='0' justifyContent='space-between'>
                 <Text fontWeight='semibold'>Filtrar productos automotores</Text>
                 <Box>
-                    <RadioGroup onChange={(e)=>setSelectedFilterOption(e)} value={selectedFilterOption}>
+                    <RadioGroup colorScheme='teal' onChange={(e) => setSelectedFilterOption(e)} value={selectedFilterOption}>
                         <Stack direction='row'>
                             {
                                 filterOptions ? filterOptions.map((option, i) =>
@@ -125,50 +125,48 @@ export default function Products({ products, completeProducts, status, onChangeS
         )
     }
 
-    if (status?.error) {
-        return(
-        <ErrorMessage message={status.error} />
-        )
-    } else if (!status?.loaded) {
-        return (
-            <LoadingAnimation />
-        )
-    } else {
-        return (
-            <Container display='flex' flexDir='column' minW='100%' p='0'>
-                <Container display='flex' flexDir={['column', 'column', 'row']} alignItems='flex-start' justifyContent={['flex-start', 'flex-start', 'space-between']} gap='2rem' minW='100%' mb='1rem' p='0'>
-                    <Container w='100%' justifyContent='space-between' display='flex' flexDir={['row', 'row', 'column']} alignItems={['center', 'center', 'flex-start']} m='0'>
-                        <Box display='flex' alignItems={['flex-start', 'flex-start', 'flex-start', 'center']} flexDir={['column', 'row', 'column', 'row']} gap='1rem'>
-                            <Menu closeOnSelect={false}>
-                                <MenuButton minWidth='fit-content' as={Button} colorScheme='teal'>
-                                    Consultar productos
-                                </MenuButton>
-                                <MenuList minWidth='fit-content'>
-                                    <MenuOptionGroup onChange={(e) => setSelectedQueryOption(e)} value={selectedQueryOption} title='Tipo de consulta' type='radio'>
-                                        {
-                                            queryOptions ? queryOptions.map((option, i) =>
-                                                <MenuItemOption key={i} value={option.key}>{option.name}</MenuItemOption>
-                                            ) : null
-                                        }
-                                    </MenuOptionGroup>
-                                </MenuList>
-                            </Menu>
+    return (
+        <Container display='flex' flexDir='column' minW='100%' p='0'>
+            <Container display='flex' flexDir={['column', 'column', 'row']} alignItems='flex-start' justifyContent={['flex-start', 'flex-start', 'space-between']} gap='2rem' minW='100%' mb='1rem' p='0'>
+                <Container w='100%' justifyContent='space-between' display='flex' flexDir={['row', 'row', 'column']} alignItems={['center', 'center', 'flex-start']} m='0'>
+                    <Box display='flex' alignItems={['flex-start', 'flex-start', 'flex-start', 'center']} flexDir={['column', 'row', 'column', 'row']} gap='1rem'>
+                        <Menu closeOnSelect={false}>
+                            <MenuButton minWidth='fit-content' as={Button} colorScheme='teal'>
+                                Consultar productos
+                            </MenuButton>
+                            <MenuList minWidth='fit-content'>
+                                <MenuOptionGroup onChange={(e) => setSelectedQueryOption(e)} value={selectedQueryOption} title='Tipo de consulta' type='radio'>
+                                    {
+                                        queryOptions ? queryOptions.map((option, i) =>
+                                            <MenuItemOption key={i} value={option.key}>{option.name}</MenuItemOption>
+                                        ) : null
+                                    }
+                                </MenuOptionGroup>
+                            </MenuList>
+                        </Menu>
 
-                            {
-                                queryOptions !== optionAllProducts ? createQueryContainer() : null
-                            }
+                        {
+                            queryOptions !== optionAllProducts ? createQueryContainer() : null
+                        }
 
-                        </Box>
-
-                    </Container>
-
-                    {
-                        viewFilters ? createFilterContainer() : null
-                    }
+                    </Box>
 
                 </Container>
-                <TableProducts data={products} status={status} updateTableState={updateTableState} onUpdateTable={onUpdateTable} />
+
+                {
+                    viewFilters ? createFilterContainer() : null
+                }
+
             </Container>
-        )
-    }
+
+            {
+                status?.error ? <ErrorMessage message={status.error} /> :
+                    status?.loaded ?
+                        <TableProducts data={products} status={status} updateTableState={updateTableState} onUpdateTable={onUpdateTable} />
+                        : <LoadingAnimation/>
+            }
+
+
+        </Container>
+    )
 }

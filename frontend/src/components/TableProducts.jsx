@@ -1,8 +1,9 @@
 import { React, useCallback, useRef, useState } from 'react'
-import { TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Tfoot, Td, Badge, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, ModalFooter, Alert, AlertIcon, AlertTitle, AlertDescription, Box } from '@chakra-ui/react'
+import { TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Tfoot, Td, Badge, Button, useDisclosure } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import { putRouteProductName } from '../config'
 import ErrorMessage from './ErrorMessage'
+import EditWindow from './EditWindow'
 
 export default function TableProducts({ data, status, updateTableState, onUpdateTable }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -54,93 +55,77 @@ export default function TableProducts({ data, status, updateTableState, onUpdate
 
   return (
     <>
-      <Modal
-        isCentered
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
+      <EditWindow initialRef={initialRef}
+        finalRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
-        size={['xs', 'md', 'lg']}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Editar nombre de producto</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {fetchStatus.error ? <Alert mb='1rem' status='error' display='flex' flexDir='row' alignItems='center'>
-              <AlertIcon />
-              <Box display='flex' flexDir='column'>
-                <AlertTitle>¡Error!</AlertTitle>
-                <AlertDescription>Hubo un problema actualizando los datos.</AlertDescription>
-              </Box>
-            </Alert> : null}
-            <FormControl>
-              <FormLabel>Inserta el nuevo nombre</FormLabel>
-              <Input ref={initialRef} value={newProductName} onChange={(event) => setNewProductName(event.target.value)} />
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme='teal' mr={3} onClick={handleSaveButton}>Guardar</Button>
-            <Button onClick={onClose}>Cancelar</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
+        newProductName={newProductName}
+        setNewProductName={setNewProductName}
+        handleSaveButton={handleSaveButton}
+        fetchStatus={fetchStatus} />
       {
-        data?.length > 0 || !status?.error
-          ? <TableContainer w='100%' borderWidth='1px' borderRadius='md' bg='text_small' alignSelf='center'>
-            <Table variant='striped' colorScheme='teal'>
-              <TableCaption>Listado de productos registrados</TableCaption>
-              <Thead>
-                <Tr>
-                  <Th isNumeric>Id</Th>
-                  <Th>Nombre</Th>
-                  <Th>Tipo</Th>
-                  <Th isNumeric>Monto máximo</Th>
-                  <Th>Moneda</Th>
-                  <Th>Segmentos</Th>
-                  <Th>Acciones</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {
-                  data ? data.map((row, i) => (
-                    <Tr key={i}>
-                      <Td isNumeric fontWeight='semibold'>{row.id}</Td>
-                      <Td>{row.nombre_producto}</Td>
-                      <Td>{row['tipo_producto'].nombre_tipo}</Td>
-                      <Td isNumeric>{row.monto_maximo}</Td>
-                      <Td>
-                        {
-                          row.depositos[0] ? row.depositos[0].tipo_moneda : null
-                        }
-                      </Td>
-                      <Td>
-                        {
-                          row.segmentos ? row.segmentos.map((valor, i) => (
-                            <Badge key={i} mx='0.2rem'>{valor.nombre_segmento}</Badge>
-                          )) : null
-                        }
-                      </Td>
-                      <Td>
-                        <Button display='flex' gap='0.4rem' onClick={() => { handleEditButton(row) }}><EditIcon />Editar</Button>
-                      </Td>
-                    </Tr>
-                  )) : null
-                }
-              </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th isNumeric>Id</Th>
-                  <Th>Nombre</Th>
-                  <Th>Tipo</Th>
-                  <Th isNumeric>Monto máximo</Th>
-                  <Th>Moneda</Th>
-                  <Th>Segmentos</Th>
-                </Tr>
-              </Tfoot>
-            </Table>
-          </TableContainer>
+        data?.length > 0 || !status?.error ?
+            <TableContainer w='100%' borderWidth='1px' borderRadius='md' bg='text_small' alignSelf='center'>
+              <Table variant='striped' colorScheme='teal'>
+                <TableCaption>Listado de productos registrados</TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th isNumeric>Id</Th>
+                    <Th>Nombre</Th>
+                    <Th>Tipo</Th>
+                    <Th isNumeric>Monto máximo</Th>
+                    <Th>Segmentos</Th>
+                    <Th>Moneda</Th>
+                    <Th>Adquisición</Th>
+                    <Th>Acciones</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {
+                    data ? data.map((row, i) => (
+                      <Tr key={i}>
+                        <Td isNumeric fontWeight='semibold'>{row.id}</Td>
+                        <Td>{row.nombre_producto}</Td>
+                        <Td>{row['tipo_producto'].nombre_tipo}</Td>
+                        <Td isNumeric>{row.monto_maximo}</Td>
+                        <Td>
+                          {
+                            row.segmentos ? row.segmentos.map((valor, i) => (
+                              <Badge key={i} mx='0.2rem'>{valor.nombre_segmento}</Badge>
+                            )) : null
+                          }
+                        </Td>
+                        <Td>
+                          {
+                            row.depositos[0] ? row.depositos[0].tipo_moneda : null
+                          }
+                        </Td>
+                        <Td>
+                          {
+                            row.prestamos[0] ? row.prestamos[0].adquisicion.nombre_adquisicion : null
+                          }
+                        </Td>
+                        <Td>
+                          <Button display='flex' gap='0.4rem' onClick={() => { handleEditButton(row) }}><EditIcon />Editar</Button>
+                        </Td>
+                      </Tr>
+                    )) : null
+                  }
+                </Tbody>
+                <Tfoot>
+                  <Tr>
+                    <Th isNumeric>Id</Th>
+                    <Th>Nombre</Th>
+                    <Th>Tipo</Th>
+                    <Th isNumeric>Monto máximo</Th>
+                    <Th>Segmentos</Th>
+                    <Th>Moneda</Th>
+                    <Th>Adquisición</Th>
+                    <Th>Acciones</Th>
+                  </Tr>
+                </Tfoot>
+              </Table>
+            </TableContainer>
           : <ErrorMessage message={'Los datos no fueron obtenidos correctamente.'} />
       }
     </>

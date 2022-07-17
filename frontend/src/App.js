@@ -14,6 +14,11 @@ export default function App() {
   const [updateTable, setUpdateTable] = useState(false)
 
   useEffect(() => {
+    setStatus({
+      error: null,
+      loaded: false
+    })
+
     fetch(apiQuery)
       .then(resp => resp.json())
       .then(data => {

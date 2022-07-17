@@ -1,5 +1,6 @@
 import React from "react"
 import { Box, Flex, Text, Avatar, Show } from "@chakra-ui/react"
+import { ChevronDownIcon } from "@chakra-ui/icons"
  
 export default function Navbar() {
 return (
@@ -15,11 +16,19 @@ return (
           <Text fontSize='1rem' fontWeight='semibold' color='text'>Dashboard</Text>
         </Box>
 
-        <Box display='flex' alignItems='center' gap='1rem'>
+        <Box display='flex' alignItems='center' gap='0.6rem'>
+        <Avatar bg='green.500'/>
           <Show above="md">
-            <Text fontSize='1rem' fontWeight='semibold' color='text_small'>Bienvenido, Jose</Text>
+            <Box display='flex' flexDir='row' gap='1rem'>
+              <Box display='flex' flexDir='column'>
+                <Text fontSize='1rem' lineHeight='1rem' fontWeight='semibold' color='text_small'>Martha Castillo</Text>
+                <Text fontSize='0.8rem' lineHeight='1rem' fontWeight='light' color='text_small'>Administrador</Text>
+              </Box>
+              <Box display='flex' alignItems='center'>
+                <ChevronDownIcon color='primary' boxSize={5} />
+              </Box>
+            </Box>
           </Show>
-          <Avatar bg='green.500'/>
         </Box>
         
         
