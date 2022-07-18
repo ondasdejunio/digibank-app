@@ -3,6 +3,7 @@ Aplicación web fullstack que simula el dashboard de un banco digital llamado Di
 
 Desarrollado por parte del back-end una base de datos SQL empleando MySQL y XAMPP, Node JS, Express JS y Sequelize; y por el lado de front-end React JS y Chakra UI. Permite visualizar, consultar, filtrar y modificar diferentes aspectos almacenados en la base de datos.
 
+
 ## Funciones
 :white_check_mark: Visualiza la información de los productos del banco en una tabla organizada.
 
