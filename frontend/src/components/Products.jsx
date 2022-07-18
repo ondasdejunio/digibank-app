@@ -44,7 +44,7 @@ export default function Products({ products, completeProducts, status, onChangeS
     }, [selectedQueryValue, onChangeApiUrl, selectedQueryOption])
 
     const handleChangeFilterValue = useCallback(() => {
-        onChangeStatus({ error: null, loaded: false })
+        onChangeStatus({ failed: null, errorMessage: null, loaded: false })
         if (selectedFilterOption !== optionAllProducts) {
             const filteredProducts = []
             if (completeProducts) {
@@ -69,7 +69,7 @@ export default function Products({ products, completeProducts, status, onChangeS
         } else {
             onChangeProducts(completeProducts)
         }
-        onChangeStatus({ error: null, loaded: true })
+        onChangeStatus({ failed: false, errorMessage: null, loaded: true })
     }, [completeProducts, selectedFilterOption, onChangeProducts, onChangeStatus])
 
     useEffect(() => {
@@ -89,7 +89,7 @@ export default function Products({ products, completeProducts, status, onChangeS
         if (selectedQueryOption !== optionAllProducts) {
             if (selectedQueryOption === optionByType) {
                 return (
-                    <Select w='fit-content' onChange={(e) => setSelectedQueryValue(e.target.value)} value={selectedQueryValue}>
+                    <Select w='fit-content' isDisabled={status?.failed || !status?.loaded ? true : false} onChange={(e) => setSelectedQueryValue(e.target.value)} value={selectedQueryValue}>
                         <option value={optionAllProducts}>Selecciona el valor</option>
                         <option value='optionAuto'>Préstamo Automotor</option>
                         <option value='optionHouse'>Préstamo Hipotecario</option>
@@ -97,7 +97,7 @@ export default function Products({ products, completeProducts, status, onChangeS
                     </Select>)
             } else if (selectedQueryOption === optionBySegment) {
                 return (
-                    <Select w='fit-content' onChange={(e) => setSelectedQueryValue(e.target.value)} value={selectedQueryValue}>
+                    <Select w='fit-content' isDisabled={status?.failed || !status?.loaded ? true : false} onChange={(e) => setSelectedQueryValue(e.target.value)} value={selectedQueryValue}>
                         <option value={optionAllProducts}>Selecciona el valor</option>
                         <option value='optionYoung'>Jóvenes</option>
                         <option value='optionStan'>Standard</option>
@@ -109,10 +109,10 @@ export default function Products({ products, completeProducts, status, onChangeS
 
     const createFilterContainer = () => {
         return (
-            <Container w='100%' display='flex' flexDir={['row', 'row', 'column']} alignItems={['center', 'center', 'flex-start']} m='0' justifyContent='space-between'>
+            <Container w='100%' display='flex' gap='0.5rem' flexDir={['column', 'row', 'column']} alignItems={['flex-start', 'center', 'flex-start']} m='0' justifyContent='space-between'>
                 <Text fontWeight='semibold'>Filtrar productos automotores</Text>
                 <Box>
-                    <RadioGroup colorScheme='teal' onChange={(e) => setSelectedFilterOption(e)} value={selectedFilterOption}>
+                    <RadioGroup isDisabled={status?.failed || !status?.loaded ? true : false} colorScheme='teal' onChange={(e) => setSelectedFilterOption(e)} value={selectedFilterOption}>
                         <Stack direction='row'>
                             {
                                 filterOptions ? filterOptions.map((option, i) =>
@@ -129,10 +129,12 @@ export default function Products({ products, completeProducts, status, onChangeS
         <Container display='flex' flexDir='column' minW='100%' p='0'>
             <Container display='flex' flexDir={['column', 'column', 'row']} alignItems='flex-start' justifyContent={['flex-start', 'flex-start', 'space-between']} gap='2rem' minW='100%' mb='1rem' p='0'>
                 <Container w='100%' justifyContent='space-between' display='flex' flexDir={['row', 'row', 'column']} alignItems={['center', 'center', 'flex-start']} m='0'>
-                    <Box display='flex' alignItems={['flex-start', 'flex-start', 'flex-start', 'center']} flexDir={['column', 'row', 'column', 'row']} gap='1rem'>
+                    <Container w='100%' display='flex' gap='0.5rem' flexDir={['column', 'row', 'column']} alignItems={['flex-start', 'center', 'flex-start']} m='0' p='0' justifyContent='space-between'>
+                    <Text fontWeight='semibold'>Consultar listado de productos</Text>
+                    <Box display='flex' alignItems={['flex-start', 'flex-start', 'flex-start', 'center']} flexDir={['row', 'row', 'column', 'row']} gap='1rem'>
                         <Menu closeOnSelect={false}>
                             <MenuButton minWidth='fit-content' as={Button} colorScheme='teal'>
-                                Consultar productos
+                                Tipo de consulta
                             </MenuButton>
                             <MenuList minWidth='fit-content'>
                                 <MenuOptionGroup onChange={(e) => setSelectedQueryOption(e)} value={selectedQueryOption} title='Tipo de consulta' type='radio'>
@@ -150,6 +152,8 @@ export default function Products({ products, completeProducts, status, onChangeS
                         }
 
                     </Box>
+                    </Container>
+                    
 
                 </Container>
 
@@ -160,7 +164,7 @@ export default function Products({ products, completeProducts, status, onChangeS
             </Container>
 
             {
-                status?.error ? <ErrorMessage message={status.error} /> :
+                status?.failed ? <ErrorMessage message={status.errorMessage} /> :
                     status?.loaded ?
                         <TableProducts data={products} status={status} updateTableState={updateTableState} onUpdateTable={onUpdateTable} />
                         : <LoadingAnimation/>

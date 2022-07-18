@@ -7,7 +7,7 @@ export default function ErrorMessage({message}) {
             <AlertIcon />
             <Box display='flex' flexDir='column'>
                 <AlertTitle>¡Error!</AlertTitle>
-                <AlertDescription>{`Hubo un problema en el sistema: ${message}`}</AlertDescription>
+                <AlertDescription>{`Hubo un problema en el sistema. Por favor, pide soporte indicando el siguiente error: "${message}"`}</AlertDescription>
             </Box>
         </Alert>
   )

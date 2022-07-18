@@ -44,8 +44,21 @@ const DepositoModel = db.define('deposito', {
     }
 }, {timestamps: false})
 
-DepositoModel.belongsToMany(ProductoModel, {through: 'producto_deposito'})
-ProductoModel.belongsToMany(DepositoModel, {through: 'producto_deposito'})
+const ProductoDepositoModel = db.define('producto_deposito', {
+    productoId: {
+        type: DataTypes.INTEGER,
+        required: true,
+        allowNull: false
+    },
+    depositoId: {
+        type: DataTypes.INTEGER,
+        required: true,
+        allowNull: false
+    }
+}, { timestamps: false })
+
+DepositoModel.belongsToMany(ProductoModel, {through: ProductoDepositoModel, foreignKey: 'depositoId'})
+ProductoModel.belongsToMany(DepositoModel, {through: ProductoDepositoModel, foreignKey: 'productoId'})
 
 const SegmentoModel = db.define('segmento', {
     nombre_segmento: {
@@ -55,8 +68,21 @@ const SegmentoModel = db.define('segmento', {
     }
 }, {timestamps: false})
 
-SegmentoModel.belongsToMany(ProductoModel, {through: 'producto_segmento'})
-ProductoModel.belongsToMany(SegmentoModel, {through: 'producto_segmento'})
+const ProductoSegmentoModel = db.define('producto_segmento', {
+    productoId: {
+        type: DataTypes.INTEGER,
+        required: true,
+        allowNull: false
+    },
+    segmentoId: {
+        type: DataTypes.INTEGER,
+        required: true,
+        allowNull: false
+    }
+}, { timestamps: false })
+
+SegmentoModel.belongsToMany(ProductoModel, {through: ProductoSegmentoModel, foreignKey: 'segmentoId'})
+ProductoModel.belongsToMany(SegmentoModel, {through: ProductoSegmentoModel, foreignKey: 'productoId'})
 
 const PrestamoModel = db.define('prestamo', {
     valor_prestamo: {
@@ -91,8 +117,21 @@ const AdquisicionModel = db.define('adquisicion', {
 AdquisicionModel.hasMany(PrestamoModel)
 PrestamoModel.belongsTo(AdquisicionModel)
 
-ProductoModel.belongsToMany(PrestamoModel, {through: 'producto_prestamo'})
-PrestamoModel.belongsToMany(ProductoModel, {through: 'producto_prestamo'})
+const ProductoPrestamoModel = db.define('producto_prestamo', {
+    productoId: {
+        type: DataTypes.INTEGER,
+        required: true,
+        allowNull: false
+    },
+    prestamoId: {
+        type: DataTypes.INTEGER,
+        required: true,
+        allowNull: false
+    }
+}, { timestamps: false })
+
+ProductoModel.belongsToMany(PrestamoModel, {through: ProductoPrestamoModel, foreignKey: 'productoId' })
+PrestamoModel.belongsToMany(ProductoModel, {through: ProductoPrestamoModel, foreignKey: 'prestamoId'})
 
 const models = {
     ProductoModel,

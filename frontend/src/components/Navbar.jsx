@@ -21,7 +21,7 @@ return (
           <Show above="md">
             <Box display='flex' flexDir='row' gap='1rem'>
               <Box display='flex' flexDir='column'>
-                <Text fontSize='1rem' lineHeight='1rem' fontWeight='semibold' color='text_small'>Martha Castillo</Text>
+                <Text fontSize='1rem' lineHeight='1rem' fontWeight='semibold' color='text_small'>Andrés Castillo</Text>
                 <Text fontSize='0.8rem' lineHeight='1rem' fontWeight='light' color='text_small'>Administrador</Text>
               </Box>
               <Box display='flex' alignItems='center'>

@@ -12,7 +12,8 @@ export default function TableProducts({ data, status, updateTableState, onUpdate
   const [newProductName, setNewProductName] = useState(null)
   const [productId, setProductId] = useState(null)
   const [fetchStatus, setFetchStatus] = useState({
-    error: null,
+    failed: null,
+    errorMessage: null,
     loaded: false
   })
 
@@ -29,14 +30,16 @@ export default function TableProducts({ data, status, updateTableState, onUpdate
       .then(resp => resp.json())
       .then(dataRes => {
         setFetchStatus({
-          error: null,
+          failed: false,
+          errorMessage: null,
           loaded: true
         })
         onClose()
       })
       .catch(errorRes => {
         setFetchStatus({
-          error: errorRes,
+          failed: false,
+          errorMessage: errorRes,
           loaded: true
         })
       })
@@ -64,7 +67,7 @@ export default function TableProducts({ data, status, updateTableState, onUpdate
         handleSaveButton={handleSaveButton}
         fetchStatus={fetchStatus} />
       {
-        data?.length > 0 || !status?.error ?
+        data?.length > 0 || status?.failed ?
             <TableContainer w='100%' borderWidth='1px' borderRadius='md' bg='text_small' alignSelf='center'>
               <Table variant='striped' colorScheme='teal'>
                 <TableCaption>Listado de productos registrados</TableCaption>
@@ -126,7 +129,7 @@ export default function TableProducts({ data, status, updateTableState, onUpdate
                 </Tfoot>
               </Table>
             </TableContainer>
-          : <ErrorMessage message={'Los datos no fueron obtenidos correctamente.'} />
+          : <ErrorMessage message={status.errorMessage} />
       }
     </>
   )

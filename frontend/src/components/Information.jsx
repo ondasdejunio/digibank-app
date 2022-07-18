@@ -20,7 +20,7 @@ export default function Information() {
                 m='0.5rem 0 2rem 0'
                 fontSize={['md', 'md', 'lg']}
                 color='secondary'>
-                Usa las herramientas de consulta y filtrado para obtener tus resultados.
+                Utiliza las herramientas de consulta, filtrado y modificación de datos para obtener y manipular tus resultados.
             </Text>
         </Box>
     )

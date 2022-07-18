@@ -7,7 +7,7 @@ import Information from "./components/Information"
 import Products from "./components/Products";
 
 export default function App() {
-  const [status, setStatus] = useState({error: null, loaded: false})
+  const [status, setStatus] = useState({failed: null, errorMessage: null, loaded: false})
   const [products, setProducts] = useState(null)
   const [completeProducts, setCompleteProducts] = useState(null)
   const [apiQuery, setApiQuery] = useState(getRouteAllProducts)
@@ -15,28 +15,37 @@ export default function App() {
 
   useEffect(() => {
     setStatus({
-      error: null,
+      failed: null,
+      errorMessage: null,
       loaded: false
     })
 
     fetch(apiQuery)
       .then(resp => resp.json())
       .then(data => {
-        setCompleteProducts(data)
-        setProducts(data)
-        setStatus({
-          error: null,
-          loaded: true
-        })
+        if(Array.isArray(data)) {
+          setCompleteProducts(data)
+          setProducts(data)
+          setStatus({
+            failed: false,
+            errorMessage: null,
+            loaded: true
+          })
+        } else {
+          setStatus({
+            failed: true,
+            errorMessage: data.message,
+            loaded: true
+          })
+        }
       })
       .catch(errorRes => {
-        console.log('hola', errorRes)
         setStatus({
-          error: errorRes,
+          failed: true,
+          errorMessage: errorRes,
           loaded: true
         })
       })
-  
     }, [apiQuery, updateTable])
 
   return (

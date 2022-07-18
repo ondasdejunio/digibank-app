@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.101.7:8000/productos'
+const apiUrl = 'http://localhost:8000/productos'
 const [routeAllProducts, routeProductType, routeSegmentType] = ['', 'filtrarTipo', 'filtrarSegmento']
 
 export const queryOptions = [
