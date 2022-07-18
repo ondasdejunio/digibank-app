@@ -14,7 +14,7 @@ Aplicación web fullstack que simula el dashboard de un banco digital llamado Di
 ## Características
 :white_check_mark: Interfaz de usuario simple e intuitiva.
 
-:white_check_mark: Manejo de errores en la interfaz ante cualquier inconveniente en las consultas realizadas.
+:white_check_mark: Manejo de errores en la interfaz.
 
 :white_check_mark: Diseño responsive adaptable a diferentes dimensiones de pantalla.
 
